@@ -26,7 +26,15 @@ var todoReducer = (state = stateDefault , action) => {
 };
 
 //create store that takes in a reducer
-var todoStore = redux.createStore(todoReducer);
+var todoStore = redux.createStore(todoReducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
+
+//subscribe and unsubscribe
+var unsubscribeSeachText = todoStore.subscribe(() => {
+  var state = todoStore.getState();
+  console.log('searchtext', state.searchText)
+});
 
 //get modified state from the store
 var currentState = todoStore.getState();
