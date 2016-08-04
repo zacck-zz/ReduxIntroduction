@@ -7,6 +7,9 @@ var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 var Main = require('Main');
 
 
+
+
+
 //app css require
 require('style!css!sass!applicationStyles');
 
@@ -20,3 +23,7 @@ ReactDOM.render(    //pass two args, JSX and the app element
   </Router>,
   document.getElementById('app') //where to render
 );
+
+
+//redux
+require('./redux-example.jsx');
