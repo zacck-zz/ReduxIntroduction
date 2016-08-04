@@ -6,16 +6,49 @@ console.log('starting redux');
 //takes in a pure function 'a reducer'
 //a reducer takes the existing state and actions as arguments
 // and computes the new state
+var stateDefault = {
+  name: 'Anon',
+  hobbies: [],
+  movies: []
+}
 
+//id of item
+var nextHobbyId = 1;
+//id of movie
+var nextMovieId = 1;
 //make the state an optional variable
-var reducer =  (state = {name: 'Anonymous'}, action) => {
+var reducer =  (state = stateDefault, action) => {
   switch(action.type){
     case 'CHANGE_NAME':
       return {
         ...state,
         name: action.name
       }
-      break;
+    case 'ADD_HOBBY':
+      return {
+        ...state,
+        hobbies: [...state.hobbies,{
+          id: nextHobbyId++,
+          hobby: action.hobby
+        }]
+      };
+    case 'ADD_MOVIE':
+      return {
+        ...state,
+        movies: [
+          ...state.movies,
+          {
+            title: action.title,
+            genre: action.genre,
+            id: nextMovieId++
+          }
+        ]
+      };
+    case 'REMOVE_HOBBY':
+      return {
+        ...state,
+        hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
+      };
     default:
         return state;
   }
@@ -30,6 +63,7 @@ var unsubscribe = store.subscribe(() => {
 
   console.log('name is ', state.name);
   document.getElementById('app').innerHTML = state.name;
+  console.log('New State', store.getState());
 });
 
 //unsubscribe();
@@ -47,7 +81,35 @@ store.dispatch({
   name: 'Zacck'
 });
 
+store.dispatch({
+  type: 'ADD_HOBBY',
+  hobby: 'Running'
+});
 
+store.dispatch({
+  type: 'ADD_HOBBY',
+  hobby: 'Walking'
+});
+
+//remover action
+store.dispatch({
+  type:'REMOVE_HOBBY',
+  id: 2
+});
+
+
+//add to an array in the state
+store.dispatch({
+  type: 'ADD_MOVIE',
+  title: 'The Matrix',
+  genre: 'Action Thriller'
+});
+
+store.dispatch({
+  type: 'ADD_MOVIE',
+  title: 'The Horror',
+  genre: 'Horror'
+});
 
 store.dispatch({
   type: 'CHANGE_NAME',
