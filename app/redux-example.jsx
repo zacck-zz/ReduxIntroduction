@@ -32,6 +32,11 @@ var reducer =  (state = stateDefault, action) => {
           hobby: action.hobby
         }]
       };
+    case 'REMOVE_HOBBY':
+        return {
+          ...state,
+          hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
+        };
     case 'ADD_MOVIE':
       return {
         ...state,
@@ -44,11 +49,11 @@ var reducer =  (state = stateDefault, action) => {
           }
         ]
       };
-    case 'REMOVE_HOBBY':
+    case 'REMOVE_MOVIE':
       return {
         ...state,
-        hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
-      };
+        movies: state.movies.filter((movie) => movie.id !== action.id)
+      }
     default:
         return state;
   }
@@ -109,6 +114,11 @@ store.dispatch({
   type: 'ADD_MOVIE',
   title: 'The Horror',
   genre: 'Horror'
+});
+
+store.dispatch({
+  type: 'REMOVE_MOVIE',
+  id: 2
 });
 
 store.dispatch({
