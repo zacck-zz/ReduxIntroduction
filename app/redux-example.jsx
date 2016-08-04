@@ -9,10 +9,31 @@ console.log('starting redux');
 
 //make the state an optional variable
 var reducer =  (state = {name: 'Anonymous'}, action) => {
-  return state;
+  switch(action.type){
+    case 'CHANGE_NAME':
+      return {
+        ...state,
+        name: action.name
+      }
+      break;
+    default:
+        return state;
+  }
 };
 var store = redux.createStore(reducer);
 
 var currentState = store.getState();
 
 console.log('currentState', currentState);
+
+
+/*dispatch an action to the store*/
+store.dispatch({
+  /*this is a required attribute of an action */
+  type: 'CHANGE_NAME',
+  /*takin the action here using this attribute*/
+  name: 'Zacck'
+});
+
+//check that state was changed
+console.log('name should be Zacck', store.getState());
