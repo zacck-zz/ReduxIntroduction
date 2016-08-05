@@ -17,47 +17,56 @@ var nextHobbyId = 1;
 //id of movie
 var nextMovieId = 1;
 //make the state an optional variable
-var reducer =  (state = stateDefault, action) => {
-  switch(action.type){
+//multiple reducers
+var nameReducer = (state = 'Anon', action) => {
+  switch(action.type) {
     case 'CHANGE_NAME':
-      return {
-        ...state,
-        name: action.name
-      }
-    case 'ADD_HOBBY':
-      return {
-        ...state,
-        hobbies: [...state.hobbies,{
-          id: nextHobbyId++,
-          hobby: action.hobby
-        }]
-      };
-    case 'REMOVE_HOBBY':
-        return {
-          ...state,
-          hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
-        };
-    case 'ADD_MOVIE':
-      return {
-        ...state,
-        movies: [
-          ...state.movies,
-          {
-            title: action.title,
-            genre: action.genre,
-            id: nextMovieId++
-          }
-        ]
-      };
-    case 'REMOVE_MOVIE':
-      return {
-        ...state,
-        movies: state.movies.filter((movie) => movie.id !== action.id)
-      }
+      return action.name
     default:
-        return state;
+      return state;
+  };
+};
+
+var hobbiesReducer = (state = [], action) => {
+  switch(action.type) {
+    case 'ADD_HOBBY':
+      return [
+        ...state,
+        {
+        id: nextHobbyId++,
+        hobby: action.hobby
+      }];
+    case 'REMOVE_HOBBY':
+      return state.filter((hobby) => hobby.id !== action.id);
+    default:
+      return state;
   }
 };
+//challenge movies reducer
+var moviesReducer = (state = [], action) => {
+  switch(action.type) {
+    case 'ADD_MOVIE':
+      return [
+        ...state,
+        {
+          title: action.title,
+          genre: action.genre,
+          id: nextMovieId++
+        }
+      ];
+    case 'REMOVE_MOVIE':
+      return state.filter((movie) => movie.id !== action.id);
+    default:
+      return state;
+  }
+};
+//combineReducer takes one object argument
+//the object contains key value pairs of reducers
+var reducer = redux.combineReducers({
+  name: nameReducer,
+  hobbies: hobbiesReducer,
+  movies: moviesReducer
+});
 var store = redux.createStore(reducer, redux.compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
 ));
