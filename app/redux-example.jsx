@@ -2,22 +2,8 @@ var redux = require('redux');
 
 console.log('starting redux');
 
-//object tha represents application
-//takes in a pure function 'a reducer'
-//a reducer takes the existing state and actions as arguments
-// and computes the new state
-var stateDefault = {
-  name: 'Anon',
-  hobbies: [],
-  movies: []
-}
-
-//id of item
-var nextHobbyId = 1;
-//id of movie
-var nextMovieId = 1;
-//make the state an optional variable
-//multiple reducers
+//Name Reducers and Action Generators
+//-----------------------------------
 var nameReducer = (state = 'Anon', action) => {
   switch(action.type) {
     case 'CHANGE_NAME':
@@ -27,6 +13,17 @@ var nameReducer = (state = 'Anon', action) => {
   };
 };
 
+//ActionGenerator
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  }
+};
+//---------------------------
+//movies reducer and action generators
+//id of item
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch(action.type) {
     case 'ADD_HOBBY':
@@ -42,7 +39,27 @@ var hobbiesReducer = (state = [], action) => {
       return state;
   }
 };
+
+//Action generators
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby: hobby
+  }
+};
+
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  }
+};
+
+
+//-----------------------------
 //challenge movies reducer
+//id of movie
+var nextMovieId = 1;
 var moviesReducer = (state = [], action) => {
   switch(action.type) {
     case 'ADD_MOVIE':
@@ -60,6 +77,23 @@ var moviesReducer = (state = [], action) => {
       return state;
   }
 };
+
+//add movies Action Generator
+var addMovie = (title, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    genre
+  }
+};
+//remove movie Action generator
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
+  }
+};
+
 //combineReducer takes one object argument
 //the object contains key value pairs of reducers
 var reducer = redux.combineReducers({
@@ -88,49 +122,20 @@ console.log('currentState', currentState);
 
 
 /*dispatch an action to the store*/
-store.dispatch({
-  /*this is a required attribute of an action */
-  type: 'CHANGE_NAME',
-  /*takin the action here using this attribute*/
-  name: 'Zacck'
-});
+store.dispatch(changeName('Zacck'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Running'
-});
+store.dispatch(addHobby('Running'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Walking'
-});
+store.dispatch(addHobby('walking'));
 
 //remover action
-store.dispatch({
-  type:'REMOVE_HOBBY',
-  id: 2
-});
+store.dispatch(removeHobby(2));
 
 
 //add to an array in the state
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'The Matrix',
-  genre: 'Action Thriller'
-});
+store.dispatch(addMovie('Mad Max', 'Action Extreme'));
+store.dispatch(addMovie('Zacck The Hack ', 'suspense'));
 
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'The Horror',
-  genre: 'Horror'
-});
+store.dispatch(removeMovie(2));
 
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 2
-});
-
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Emily'
-});
+store.dispatch(changeName('Emily'));
