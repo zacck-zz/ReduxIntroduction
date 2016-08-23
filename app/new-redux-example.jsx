@@ -6,9 +6,16 @@ console.log('starting redux examples');
 //and an action and computes the new state
 var reducer = (state = {name: 'anonymous'}/*existing state before action triggered*/,
   action/*this is the action called*/) => {
-
-    //returns state even if there is no action or the action is not recognised
-    return state;
+    switch(action.type) {
+      case 'CHANGE_NAME':
+        return {
+          ...state,
+          name: action.name
+        };
+      default:
+      //returns state even if there is no action or the action is not recognised
+        return state;
+    }
 };
 
 
@@ -19,3 +26,16 @@ var store = redux.createStore(reducer);
 var currentState = store.getState();
 
 console.log('currentState', currentState);
+
+//actions
+//actions are dispatched in reducers with state to return new state
+var action = {
+  type: 'CHANGE_NAME',
+  name: 'Zacck'
+}
+
+//use this method to dispatch actions
+store.dispatch(action);
+
+//output new ste
+console.log('Name should be Zacck' store.getState())

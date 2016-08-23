@@ -26,12 +26,31 @@ var mState =  {
 
 var reducer = (state = mState, action) => {
 
-  //always return state
-  return state;
+  //switch searh types
+  switch (action.type) {
+    case 'CHANGE_SEARCH_TEXT':
+      return {
+        ...state,
+        searchText: action.searchText
+      };
+    default:
+      //always return state
+      return state;
+
+  }
 }
 
 var store = redux.createStore(reducer);
 
 var currentState = store.getState();
-
 console.log('current todostate ', currentState);
+
+
+var action = {
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'dog'
+}
+
+store.dispatch(action);
+
+console.log('search text should be dog ', store.getState());
