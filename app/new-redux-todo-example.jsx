@@ -3,8 +3,8 @@ var redux = require('redux');
 console.log('redux loaded');
 
 var mState =  {
-  searchText: 'Dog',
-  showCompleted: 'true',
+  searchText: '',
+  showCompleted: 'false',
   todos: [
     {
       id: 1,
@@ -15,6 +15,11 @@ var mState =  {
       id: 2,
       text: 'work on redux',
       createdAt: 19799
+    },
+    {
+      id: 3,
+      text: "walk the Dog",
+      createdAt: 179739
     }
   ]
 }
