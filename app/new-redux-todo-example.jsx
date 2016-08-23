@@ -40,7 +40,18 @@ var reducer = (state = mState, action) => {
   }
 }
 
-var store = redux.createStore(reducer);
+var store = redux.createStore(reducer, redux.compose(
+  /*check if developer tools exist and if they do call them as a function*/
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
+
+//Subscribe to change
+
+var unsubscribe =  store.subscribe(() => {
+  var state = store.getState();
+
+  console.log('searchtext is ', state.searchText);
+});
 
 var currentState = store.getState();
 console.log('current todostate ', currentState);
@@ -53,4 +64,14 @@ var action = {
 
 store.dispatch(action);
 
-console.log('search text should be dog ', store.getState());
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'new text'
+})
+
+
+unsubscribe();
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'new new text'
+})
