@@ -30,7 +30,6 @@ var nextTodoId = 1;
 var nextMovieId = 200;
 
 var reducer = (state = mState, action) => {
-
   //switch searh types
   switch (action.type) {
     case 'CHANGE_SEARCH_TEXT':
