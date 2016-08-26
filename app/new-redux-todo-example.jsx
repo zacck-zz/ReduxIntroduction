@@ -2,35 +2,8 @@ var redux = require('redux');
 
 console.log('redux loaded');
 
-var mState =  {
-  searchText: '',
-  showCompleted: 'false',
-  todos: [
-    {
-      id: 19999,
-      text: 'go see client',
-      createdAt: 1235
-    },
-    {
-      id: 2000,
-      text: 'work on redux',
-      createdAt: 19799
-    },
-    {
-      id: 30000,
-      text: "walk the Dog",
-      createdAt: 179739
-    }
-  ],
-  movies: []
-}
-
-var nextTodoId = 1;
-
-var nextMovieId = 200;
-
-
-
+//Search reducer and action generator
+//----------------------------------
 var searchTextReducer = (state = '', action) => {
   switch(action.type) {
     case 'CHANGE_SEARCH_TEXT':
@@ -40,6 +13,18 @@ var searchTextReducer = (state = '', action) => {
   }
 };
 
+//actiongen
+//----------------------------------
+var changeSearchText =  (searchText) => {
+  return {
+    type: 'CHANGE_SEARCH_TEXT',
+    searchText
+  }
+};
+
+//todos Reducer and action gen
+//----------------------------------
+var nextTodoId = 1;
 var todosReducer = (state = [], action) => {
   switch(action.type) {
     case 'ADD_TODO':
@@ -56,7 +41,25 @@ var todosReducer = (state = [], action) => {
      return state;
   }
 }
+//action gens
+var addTodo = (text) => {
+  return {
+    type: 'ADD_TODO',
+    text
+  }
+};
 
+var removeTodo  = (id) => {
+  return {
+    type: 'REMOVE_TODO',
+    id
+  }
+}
+
+
+//movies reducer anad action gen
+//----------------------------------
+var nextMovieId = 200;
 var movieReducer = (state = [], action) =>  {
   switch(action.type) {
     case 'ADD_MOVIE':
@@ -72,6 +75,22 @@ var movieReducer = (state = [], action) =>  {
       return state.filter((movie) => movie.id !== action.id);
     default:
       return state;
+  }
+}
+
+//action generators
+var addMovie = (name, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    name,
+    genre
+  }
+};
+
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
   }
 }
 
@@ -98,56 +117,24 @@ var unsubscribe =  store.subscribe(() => {
 var currentState = store.getState();
 console.log('current todostate ', currentState);
 
+store.dispatch(changeSearchText('dog'));
 
-var action = {
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'dog'
-}
-
-store.dispatch(action);
-
-store.dispatch({
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'new text'
-});
+store.dispatch(changeSearchText('new new'));
 
 
 unsubscribe();
-store.dispatch({
-  type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'new new text'
-});
+store.dispatch(changeSearchText('new new text'));
 
 
-store.dispatch({
-  type: 'ADD_TODO',
-  text: 'Go Buy skate wheels'
-});
+store.dispatch(addTodo('Go Buy Skate Wheels'));
 
-store.dispatch({
-  type: 'ADD_TODO',
-  text: 'Draw money for Sylvia'
-});
+store.dispatch(addTodo('Draw Money for Sylvia'));
 
-store.dispatch({
-  type:'ADD_MOVIE',
-  name: 'Avengers of Ultron',
-  genre: 'Action'
-});
-store.dispatch({
-  type:'ADD_MOVIE',
-  name: 'Marvel Something',
-  genre: 'Action'
-});
+store.dispatch(addMovie('Avengers Age of Ultron', 'Action'));
+store.dispatch(addMovie('Marvel Something', 'Action'));
 
-store.dispatch({
-  type: 'REMOVE_TODO',
-  id: 2
-});
+store.dispatch(removeTodo(2));
 
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 201
-})
+store.dispatch(removeMovie(201))
 
 console.log('current state after unsubscribe and add todo ', store.getState());
