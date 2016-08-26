@@ -29,52 +29,58 @@ var nextTodoId = 1;
 
 var nextMovieId = 200;
 
-var reducer = (state = mState, action) => {
-  //switch searh types
-  switch (action.type) {
-    case 'CHANGE_SEARCH_TEXT':
-      return {
-        ...state,
-        searchText: action.searchText
-      };
-    case 'ADD_TODO':
-      return {
-        ...state,
-        /*set the todos array equal to current array
-        and add the new todo */
-        todos:[
-          ...state.todos,
-          {
-            text: action.text,
-            id: nextTodoId++
-          }
-        ]
-      };
-    case 'REMOVE_TODO':
-     return {
-       ...state,
-       todos: [
-         ...state.todos.filter((todo) => todo.id !== action.id)
-       ]
-     };
-    case 'ADD_MOVIE':
-      return {
-        ...state,
-        movies: [
-          ...state.movies,
-          {
-            name: action.name,
-            genre: action.genre,
-            id: nextMovieId++
-          }
-        ]
-      };
-    default:
-      //always return state
-      return state;
 
+
+var searchTextReducer = (state = '', action) => {
+  switch(action.type) {
+    case 'CHANGE_SEARCH_TEXT':
+      return action.searchText;
+    default:
+      return state;
+  }
+};
+
+var todosReducer = (state = [], action) => {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        {
+          text: action.text,
+          id: nextTodoId++
+        }
+      ];
+    case 'REMOVE_TODO':
+      return state.filter((todo) => todo.id !== action.id);
+    default:
+     return state;
   }
 }
+
+var movieReducer = (state = [], action) =>  {
+  switch(action.type) {
+    case 'ADD_MOVIE':
+      return [
+        ...state,
+        {
+          name: action.name,
+          genre: action.genre,
+          id: nextMovieId++
+        }
+      ];
+    case 'REMOVE_MOVIE':
+      return state.filter((movie) => movie.id !== action.id);
+    default:
+      return state;
+  }
+}
+
+//new reducer
+var reducer = redux.combineReducers({
+  searchText: searchTextReducer,
+  todos: todosReducer,
+  movies: movieReducer
+})
 
 var store = redux.createStore(reducer, redux.compose(
   /*check if developer tools exist and if they do call them as a function*/
@@ -119,6 +125,11 @@ store.dispatch({
 });
 
 store.dispatch({
+  type: 'ADD_TODO',
+  text: 'Draw money for Sylvia'
+});
+
+store.dispatch({
   type:'ADD_MOVIE',
   name: 'Avengers of Ultron',
   genre: 'Action'
@@ -131,7 +142,12 @@ store.dispatch({
 
 store.dispatch({
   type: 'REMOVE_TODO',
-  id: 30000
+  id: 2
 });
+
+store.dispatch({
+  type: 'REMOVE_MOVIE',
+  id: 201
+})
 
 console.log('current state after unsubscribe and add todo ', store.getState());
