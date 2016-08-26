@@ -1,4 +1,5 @@
 var redux = require('redux');
+var axios = require('axios');
 
 console.log('redux loaded');
 
@@ -94,11 +95,58 @@ var removeMovie = (id) => {
   }
 }
 
+//map reducer anad action gen
+//----------------------------------
+var mapReducer = (state = {isFetching: false, url: undefined}, action) => {
+  switch(action.type) {
+    case 'START_LOCATION_FETCH':
+      return {
+        isFetching: true,
+        url: undefined
+      };
+    case 'COMPLETE_LOCATION_FETCH':
+      return {
+        isFetching: true,
+        url: action.url
+      };
+    default:
+      return state;
+  }
+}
+
+//action gens
+var startLocationFetch = () => {
+  return {
+    type: 'START_LOCATION_FETCH'
+  }
+};
+
+var completeLocationFetch = (url) => {
+  return {
+    type: 'COMPLETE_LOCATION_FETCH',
+    url
+  }
+}
+
+var fetchLocation = () => {
+  store.dispatch(startLocationFetch());
+
+  /*request data*/
+  axios.get('http://ipinfo.io').then(function (res){
+      var loc = res.data.loc;
+      var baseUrl = 'http://maps.google.com?q=';
+      store.dispatch(completeLocationFetch(baseUrl + loc))
+  })
+};
+
+
+
 //new reducer
 var reducer = redux.combineReducers({
   searchText: searchTextReducer,
   todos: todosReducer,
-  movies: movieReducer
+  movies: movieReducer,
+  map: mapReducer
 })
 
 var store = redux.createStore(reducer, redux.compose(
@@ -107,12 +155,19 @@ var store = redux.createStore(reducer, redux.compose(
 ));
 
 //Subscribe to change
-
 var unsubscribe =  store.subscribe(() => {
   var state = store.getState();
-
   console.log('searchtext is ', state.searchText);
+
+  if(state.map.isFetching) {
+    console.log('Loading ....');
+  }
+  else if (state.map.url) {
+    console.log('Fetched');
+  }
 });
+
+fetchLocation();
 
 var currentState = store.getState();
 console.log('current todostate ', currentState);
