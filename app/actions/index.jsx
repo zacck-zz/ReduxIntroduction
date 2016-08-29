@@ -1,32 +1,32 @@
 var axios = require('axios');
-
-export var changeName = (name) => {
+export var changeSearchText =  (searchText) => {
   return {
-    type: 'CHANGE_NAME',
-    name
+    type: 'CHANGE_SEARCH_TEXT',
+    searchText
   }
 };
 
 
 
-export var addHobby = (hobby) => {
+export var addTodo = (text) => {
   return {
-    type: 'ADD_HOBBY',
-    hobby: hobby
+    type: 'ADD_TODO',
+    text
   }
 };
 
-export var removeHobby = (id) => {
+export var removeTodo  = (id) => {
   return {
-    type: 'REMOVE_HOBBY',
+    type: 'REMOVE_TODO',
     id
   }
-};
+}
 
-export var addMovie = (title, genre) => {
+
+export var addMovie = (name, genre) => {
   return {
     type: 'ADD_MOVIE',
-    title,
+    name,
     genre
   }
 };
@@ -36,31 +36,31 @@ export var removeMovie = (id) => {
     type: 'REMOVE_MOVIE',
     id
   }
-};
+}
 
-export var startLocationFetch =  () => {
+
+export var startLocationFetch = () => {
   return {
     type: 'START_LOCATION_FETCH'
-  };
+  }
 };
 
-export var completeLocationFetch =  (url) => {
+export var completeLocationFetch = (url) => {
   return {
     type: 'COMPLETE_LOCATION_FETCH',
     url
-  };
-};
+  }
+}
 
 export var fetchLocation = () => {
-  return (dispatch, getState) => {
+  return(dispatch, getState) => {
     dispatch(startLocationFetch());
-    axios.get('http://ipinfo.io').then(function (res) {
-      var loc = res.data.loc;
-      var baseUrl = 'http://maps.google.com?q='
 
-      dispatch(completeLocationFetch(baseUrl+loc))
-    }, function(){
-
+    /*request data*/
+    axios.get('http://ipinfo.io').then(function (res){
+        var loc = res.data.loc;
+        var baseUrl = 'http://maps.google.com?q=';
+        dispatch(completeLocationFetch(baseUrl + loc))
     });
   }
 };

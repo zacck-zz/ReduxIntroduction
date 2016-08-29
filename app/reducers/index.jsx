@@ -1,23 +1,41 @@
-//-----------------------------------
-export var nameReducer = (state = 'Anon', action) => {
+
+export var searchTextReducer = (state = '', action) => {
   switch(action.type) {
-    case 'CHANGE_NAME':
-      return action.name
+    case 'CHANGE_SEARCH_TEXT':
+      return action.searchText;
     default:
       return state;
-  };
+  }
 };
 
-//------------------------------------------
-//id of movie
-var nextMovieId = 1;
-export var moviesReducer = (state = [], action) => {
+
+var nextTodoId = 1;
+export var todosReducer = (state = [], action) => {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        {
+          text: action.text,
+          id: nextTodoId++
+        }
+      ];
+    case 'REMOVE_TODO':
+      return state.filter((todo) => todo.id !== action.id);
+    default:
+     return state;
+  }
+}
+
+
+var nextMovieId = 200;
+export var movieReducer = (state = [], action) =>  {
   switch(action.type) {
     case 'ADD_MOVIE':
       return [
         ...state,
         {
-          title: action.title,
+          name: action.name,
           genre: action.genre,
           id: nextMovieId++
         }
@@ -27,30 +45,9 @@ export var moviesReducer = (state = [], action) => {
     default:
       return state;
   }
-};
-
-//--------------------------------------------
-//id of item
-var nextHobbyId = 1;
-export var hobbiesReducer = (state = [], action) => {
-  switch(action.type) {
-    case 'ADD_HOBBY':
-      return [
-        ...state,
-        {
-        id: nextHobbyId++,
-        hobby: action.hobby
-      }];
-    case 'REMOVE_HOBBY':
-      return state.filter((hobby) => hobby.id !== action.id);
-    default:
-      return state;
-  }
-};
+}
 
 
-//---------------------------------------------
-//MAP Reducer
 export var mapReducer = (state = {isFetching: false, url: undefined}, action) => {
   switch(action.type) {
     case 'START_LOCATION_FETCH':
@@ -66,4 +63,4 @@ export var mapReducer = (state = {isFetching: false, url: undefined}, action) =>
     default:
       return state;
   }
-};
+}
